@@ -1,0 +1,196 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// User Roles Enum
+enum Role {
+  ADMIN
+  RESIDENT
+  STAFF
+}
+
+// Apartment Status Enum
+enum ApartmentStatus {
+  OCCUPIED
+  EMPTY
+}
+
+// Document Type Enum
+enum DocumentType {
+  NATIONAL_ID
+  OWNERSHIP_CONTRACT
+  RENTAL_CONTRACT
+}
+
+// Request Type Enum
+enum RequestType {
+  COMPLAINT
+  MAINTENANCE
+}
+
+// Request Status Enum
+enum RequestStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CLOSED
+}
+
+// Visitor Status Enum
+enum VisitorStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// User Model
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  password          String
+  role              Role      @default(RESIDENT)
+  resetToken        String?
+  resetTokenExpires DateTime?
+  isDeleted         Boolean   @default(false)
+  deletedAt         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  resident      Resident?
+  staff         Staff?
+  announcements Announcement[]
+
+  @@index([email])
+}
+
+// Building Model
+model Building {
+  id        String   @id @default(uuid())
+  name      String
+  number    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  apartments Apartment[]
+}
+
+// Apartment Model
+model Apartment {
+  id         String          @id @default(uuid())
+  number     String          @unique
+  floor      Int
+  status     ApartmentStatus @default(EMPTY)
+  buildingId String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  // Relations
+  building   Building   @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  resident   Resident?  // One apartment can have only one resident
+
+  @@index([number])
+}
+
+// Resident Model
+model Resident {
+  id           String    @id @default(uuid())
+  userId       String    @unique
+  phone        String
+  nationalId   String    @unique
+  profileImage String?
+  apartmentId  String?   @unique
+  isDeleted    Boolean   @default(false)
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apartment Apartment? @relation(fields: [apartmentId], references: [id], onDelete: SetNull)
+  documents Document[]
+  requests  Request[]
+  visitors  Visitor[]
+
+  @@index([nationalId])
+}
+
+// Staff Model
+model Staff {
+  id        String    @id @default(uuid())
+  userId    String    @unique
+  phone     String
+  jobTitle  String
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requests Request[] // Assigned requests
+}
+
+// Document Model
+model Document {
+  id         String       @id @default(uuid())
+  residentId String
+  type       DocumentType
+  fileUrl    String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  // Relations
+  resident Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+}
+
+// Request Model (Complaints & Maintenance)
+model Request {
+  id              String        @id @default(uuid())
+  title           String
+  description     String
+  type            RequestType
+  status          RequestStatus @default(OPEN)
+  image           String?
+  residentId      String
+  assignedStaffId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  resident      Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  assignedStaff Staff?   @relation(fields: [assignedStaffId], references: [id], onDelete: SetNull)
+}
+
+// Visitor Model
+model Visitor {
+  id         String        @id @default(uuid())
+  residentId String
+  name       String
+  phone      String
+  visitDate  DateTime
+  status     VisitorStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  // Relations
+  resident Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+}
+
+// Announcement Model
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}

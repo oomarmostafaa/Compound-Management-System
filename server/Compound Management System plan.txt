@@ -1,0 +1,289 @@
+Compound Management System - Backend Project
+
+Build a complete production-ready backend application for a Residential Compound Management System.
+
+═══════════════════════════════════════════════════════════════
+                       TECH STACK
+═══════════════════════════════════════════════════════════════
+
+• Node.js + Express.js
+• PostgreSQL + Prisma ORM
+• JWT Authentication (Access Token only)
+• RBAC (Role-Based Access Control)
+• Cloudinary + Multer (auto-detect images & PDF)
+• Nodemailer (Reset Password emails only)
+• Swagger Documentation
+• Docker & Docker Compose
+• Joi Validation
+• Bcryptjs (password hashing)
+• Helmet + Rate Limiting (100 req/15min)
+• Environment Variables (.env)
+
+═══════════════════════════════════════════════════════════════
+                      SYSTEM OVERVIEW
+═══════════════════════════════════════════════════════════════
+
+The system manages a residential compound with 3 roles: Admin, Resident, Staff.
+
+┌─────────────────────────────────────────────────────────────┐
+│ ADMIN                                                       │
+├─────────────────────────────────────────────────────────────┤
+│ • Login                                                     │
+│ • Create residents + staff accounts                         │
+│ • Soft delete residents + staff                             │
+│ • Full CRUD on buildings + apartments                       │
+│ • Assign resident to apartment                              │
+│ • View all requests (search + filter + pagination)          │
+│ • Assign staff to requests + change status                  │
+│ • View all visitors + approve/reject                        │
+│ • CRUD announcements                                        │
+│ • View dashboard statistics                                 │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ RESIDENT                                                    │
+├─────────────────────────────────────────────────────────────┤
+│ • Login                                                     │
+│ • View own profile                                          │
+│ • Upload profile image (Cloudinary)                         │
+│ • Upload/delete documents (NATIONAL_ID, OWNERSHIP_CONTRACT, │
+│   RENTAL_CONTRACT)                                          │
+│ • Create requests (COMPLAINT or MAINTENANCE) with optional  │
+│   image upload                                              │
+│ • View own requests                                         │
+│ • Close own request (set status to CLOSED)                  │
+│ • Pre-register visitors                                     │
+│ • View announcements                                        │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ STAFF                                                       │
+├─────────────────────────────────────────────────────────────┤
+│ • Login                                                     │
+│ • View own profile                                          │
+│ • View assigned requests                                    │
+│ • Update assigned request status                            │
+│ • View visitors + approve/reject                            │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+                     AUTHENTICATION
+═══════════════════════════════════════════════════════════════
+
+Implemented:
+  POST /api/auth/login             → Login (returns JWT token)
+  POST /api/auth/forgot-password   → Request password reset link
+  POST /api/auth/reset-password    → Reset password with token
+
+NOTES:
+  • JWT Access Token only (no Refresh Tokens)
+  • No Register (Admin creates accounts)
+  • No Logout (stateless JWT)
+  • No Account Activation email
+  • No Welcome email
+
+═══════════════════════════════════════════════════════════════
+                    MODULES & ENDPOINTS
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│ BUILDINGS (Admin Only)                                      │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/buildings          List (search + pagination)   │
+│ POST   /api/buildings          Create                       │
+│ GET    /api/buildings/:id      Get one                      │
+│ PUT    /api/buildings/:id      Update                       │
+│ DELETE /api/buildings/:id      Delete                       │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ APARTMENTS (Admin Only)                                     │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/apartments          List (search + filter       │
+│                                  by status + pagination)    │
+│ POST   /api/apartments          Create                      │
+│ PUT    /api/apartments/:id      Update                      │
+│ DELETE /api/apartments/:id      Delete                      │
+│ POST   /api/apartments/:id/assign  Assign resident          │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ RESIDENTS                                                   │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/residents               List (Admin only)       │
+│ POST   /api/residents               Create (Admin)          │
+│ GET    /api/residents/:id           Profile (Admin or self) │
+│ DELETE /api/residents/:id           Soft delete (Admin)     │
+│ POST   /api/residents/profile-image  Upload image (Resident)│
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ STAFF                                                       │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/staff               List (Admin only)           │
+│ POST   /api/staff               Create (Admin)              │
+│ GET    /api/staff/:id           Profile (Admin or self)     │
+│ DELETE /api/staff/:id           Soft delete (Admin)         │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ DOCUMENTS                                                   │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/documents           List (Admin: all,           │
+│                                  Resident: own)             │
+│ POST   /api/documents           Upload (Resident only)      │
+│ DELETE /api/documents/:id       Delete own (Resident)       │
+│                                                             │
+│ Types: NATIONAL_ID, OWNERSHIP_CONTRACT, RENTAL_CONTRACT     │
+│ Upload: Multer → Cloudinary (auto-detect images & PDF)      │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ REQUESTS (Complaints + Maintenance)                         │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/requests                List (search + filter   │
+│                                      by status/type + page) │
+│ POST   /api/requests                Create (Resident)       │
+│ POST   /api/requests/:id/assign     Assign staff (Admin)    │
+│ PATCH  /api/requests/:id/status     Update status           │
+│                                                             │
+│ Status: OPEN, IN_PROGRESS, COMPLETED, CLOSED                │
+│ Types:  COMPLAINT, MAINTENANCE                              │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ VISITORS                                                    │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/visitors               List (search by name/    │
+│                                     phone + filter by       │
+│                                     status + pagination)    │
+│ POST   /api/visitors               Pre-register (Resident)  │
+│ PATCH  /api/visitors/:id/status    Approve/Reject           │
+│                                                             │
+│ Status: PENDING, APPROVED, REJECTED                         │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ ANNOUNCEMENTS                                               │
+├─────────────────────────────────────────────────────────────┤
+│ GET    /api/announcements          List (sort by date/title │
+│                                     + filter by date range) │
+│ POST   /api/announcements          Create (Admin)           │
+│ GET    /api/announcements/:id      Get one                  │
+│ PUT    /api/announcements/:id      Update (Admin)           │
+│ DELETE /api/announcements/:id      Delete (Admin)           │
+│                                                             │
+│ Sorting: createdAt (asc/desc) or title (asc/desc)           │
+│ Filter: startDate / endDate                                 │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ DASHBOARD (Admin Only)                                      │
+├─────────────────────────────────────────────────────────────┤
+│ GET /api/dashboard/stats                                     │
+│                                                             │
+│ Returns: Total Residents, Staff, Buildings, Apartments,      │
+│          Occupied/Empty Apartments, Requests by status       │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+                      DATABASE MODELS
+═══════════════════════════════════════════════════════════════
+
+9 Models: User, Building, Apartment, Resident, Staff,
+           Document, Request, Visitor, Announcement
+
+Relations:
+  Building    ──→ Apartment          (One-to-Many)
+  Apartment   ──→ Resident           (One-to-One)
+  Resident    ──→ Document           (One-to-Many)
+  Resident    ──→ Request            (One-to-Many)
+  Resident    ──→ Visitor            (One-to-Many)
+  Staff       ──→ Request (assigned) (One-to-Many)
+  User        ──→ Resident           (One-to-One)
+  User        ──→ Staff              (One-to-One)
+
+Soft Delete on: User, Resident, Staff (isDeleted + deletedAt)
+Indexes on: email, nationalId, apartment number
+Transactions: Create User + Resident + Assign Apartment
+
+═══════════════════════════════════════════════════════════════
+                       FEATURES
+═══════════════════════════════════════════════════════════════
+
+• Search:      Buildings, Apartments, Residents, Requests,
+               Visitors, Announcements (by name/email/number)
+• Filter:      Requests (by status/type), Visitors (by status),
+               Apartments (by occupancy), Announcements (by date)
+• Pagination:  All listing endpoints return {page,limit,total,
+               totalPages,data}
+• Sorting:     Announcements (by createdAt or title, asc/desc)
+• File Upload: Multer → Cloudinary (auto-detect images + PDF)
+• Validation:  Joi for all request bodies
+• Swagger:     Complete API docs on /api-docs
+• Docker:      Dockerfile + docker-compose.yml
+
+═══════════════════════════════════════════════════════════════
+                       SEED DATA
+═══════════════════════════════════════════════════════════════
+
+• 1 Admin       → admin@compound.com / admin123
+• 20 Buildings  → Arabic names (الفرسان, الأندلس, ...)
+• 60 Apartments → 3 per building (20 floors × 3)
+• 40 Residents  → resident1@compound.com / resident123
+• 39 Staff      → staff1@compound.com / staff123
+                 (Electricians, Plumbers, Security, etc.)
+• 40 Requests   → Mix of COMPLAINT + MAINTENANCE
+• 30 Visitors   → Pre-registered visits
+• 20 Documents  → NATIONAL_ID / OWNERSHIP_CONTRACT / RENTAL_CONTRACT
+• 10 Announcements → Community updates
+
+═══════════════════════════════════════════════════════════════
+                    PROJECT STRUCTURE
+═══════════════════════════════════════════════════════════════
+
+src/
+├── server.js
+├── app.js
+├── config/
+│   ├── db.js               # Prisma client
+│   └── cloudinary.js       # Cloudinary config
+├── docs/
+│   └── swagger.js          # Swagger setup
+├── middlewares/
+│   ├── auth.js             # JWT authentication
+│   ├── role.js             # RBAC middleware
+│   ├── upload.js           # Multer config
+│   └── validate.js         # Joi validation middleware
+├── modules/
+│   ├── auth/               # Login + forgot/reset password
+│   ├── buildings/          # CRUD buildings
+│   ├── apartments/         # CRUD apartments + assign
+│   ├── residents/          # CRUD residents + profile image
+│   ├── staff/              # CRUD staff
+│   ├── documents/          # Upload/view/delete documents
+│   ├── requests/           # Requests + assign + status
+│   ├── visitors/           # Visitors + approve/reject
+│   ├── announcements/      # CRUD announcements
+│   └── dashboard/          # Dashboard stats
+├── prisma/
+│   ├── schema.prisma       # Database schema (9 models)
+│   ├── seed.js             # Full seed script
+│   └── migrations/         # Prisma migrations
+└── utils/
+    ├── AppError.js         # Custom error class
+    ├── cloudinaryUpload.js # Upload helper
+    ├── email.js            # Nodemailer transport
+    └── token.js            # JWT generator
+
+═══════════════════════════════════════════════════════════════
+                      SECURITY
+═══════════════════════════════════════════════════════════════
+
+• Helmet (security headers)
+• Rate Limiting (100 requests per 15 min)
+• Joi Input Validation
+• Bcryptjs for password hashing
+• JWT Authentication middleware
+• RBAC middleware (role-based access control)
+• Environment Variables (.env)
