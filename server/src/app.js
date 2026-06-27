@@ -8,26 +8,28 @@ require("dotenv").config();
 const app = express();
 
 // CORS Configuration
-const corsOptions = {
+const corsOptions = { 
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, Postman)
+    console.log("Origin:", origin);
+
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
       "http://localhost:5173",
       "http://localhost:3000",
       "http://localhost:5000",
-
       "https://compound-management-system-jw3fhmz9i-omar-mostafa-s-projects.vercel.app",
-
       process.env.FRONTEND_URL,
-    ].filter(Boolean); // Remove undefined values
+    ].filter(Boolean);
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+    console.log("Allowed:", allowedOrigins);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
+
+    console.log("Blocked:", origin);
+    return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
 };
@@ -35,6 +37,7 @@ const corsOptions = {
 // Global Middlewares
 app.use(helmet());
 app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 
