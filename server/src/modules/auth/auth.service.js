@@ -7,45 +7,36 @@ const AppError = require('../../utils/AppError');
 
 class AuthService {
   async login(email, password) {
-  console.log("Email entered:", email);
+    const user = await prisma.user.findUnique({ 
+      where: { email },
+      include: {
+        resident: true,
+        staff: true
+      }
+    });
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-    include: {
-      resident: true,
-      staff: true
+    if (!user) {
+      throw new AppError('Invalid email or password', 401);
     }
-  });
 
-  console.log("User from DB:", user);
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      throw new AppError('Invalid email or password', 401);
+    }
 
-  if (!user) {
-    throw new AppError("Invalid email or password", 401);
+    const accessToken = generateAccessToken(user);
+
+    return {
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role,
+        residentId: user.resident?.id || null,
+        staffId: user.staff?.id || null
+      },
+      accessToken
+    };
   }
-
-  const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-  console.log("Entered password:", password);
-  console.log("Stored hash:", user.password);
-  console.log("Password Match:", isPasswordMatch);
-
-  if (!isPasswordMatch) {
-    throw new AppError("Invalid email or password", 401);
-  }
-
-  const accessToken = generateAccessToken(user);
-
-  return {
-    user: {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      residentId: user.resident?.id || null,
-      staffId: user.staff?.id || null
-    },
-    accessToken
-  };
-}
 
   async forgotPassword(email) {
     const user = await prisma.user.findUnique({ where: { email } });
