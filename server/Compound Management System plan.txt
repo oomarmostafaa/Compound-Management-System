@@ -30,7 +30,7 @@ The system manages a residential compound with 3 roles: Admin, Resident, Staff.
 ├─────────────────────────────────────────────────────────────┤
 │ • Login                                                     │
 │ • Create residents + staff accounts                         │
-│ • Soft delete residents + staff                             │
+│ • Delete residents + staff                                  │
 │ • Full CRUD on buildings + apartments                       │
 │ • Assign resident to apartment                              │
 │ • View all requests (search + filter + pagination)          │
@@ -113,7 +113,7 @@ NOTES:
 │ GET    /api/residents               List (Admin only)       │
 │ POST   /api/residents               Create (Admin)          │
 │ GET    /api/residents/:id           Profile (Admin or self) │
-│ DELETE /api/residents/:id           Soft delete (Admin)     │
+│ DELETE /api/residents/:id           Delete (Admin)          │
 │ POST   /api/residents/profile-image  Upload image (Resident)│
 └─────────────────────────────────────────────────────────────┘
 
@@ -123,7 +123,7 @@ NOTES:
 │ GET    /api/staff               List (Admin only)           │
 │ POST   /api/staff               Create (Admin)              │
 │ GET    /api/staff/:id           Profile (Admin or self)     │
-│ DELETE /api/staff/:id           Soft delete (Admin)         │
+│ DELETE /api/staff/:id           Delete (Admin)              │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -203,7 +203,6 @@ Relations:
   User        ──→ Resident           (One-to-One)
   User        ──→ Staff              (One-to-One)
 
-Soft Delete on: User, Resident, Staff (isDeleted + deletedAt)
 Indexes on: email, nationalId, apartment number
 Transactions: Create User + Resident + Assign Apartment
 
