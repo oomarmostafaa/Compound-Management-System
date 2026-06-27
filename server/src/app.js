@@ -8,27 +8,26 @@ require("dotenv").config();
 const app = express();
 
 // CORS Configuration
-const corsOptions = { 
-  origin: function (origin, callback) {
-    console.log("Origin:", origin);
+const vercelRegex = /https:\/\/compound-management-system-[\w-]+-omar-mostafa-s-projects\.vercel\.app/;
 
+const corsOptions = {
+  origin: function (origin, callback) {
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
       "http://localhost:5173",
       "http://localhost:3000",
       "http://localhost:5000",
-      "https://compound-management-system-jw3fhmz9i-omar-mostafa-s-projects.vercel.app",
-      process.env.FRONTEND_URL,
+      "http://127.0.0.1:5173",
+      "http://127.0.0.1:3000",
     ].filter(Boolean);
 
-    console.log("Allowed:", allowedOrigins);
+    const productionUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
 
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || vercelRegex.test(origin) || origin === productionUrl) {
       return callback(null, true);
     }
 
-    console.log("Blocked:", origin);
     return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
