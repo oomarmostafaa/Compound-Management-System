@@ -6,37 +6,50 @@ const { sendResetPasswordEmail } = require('../../utils/email');
 const AppError = require('../../utils/AppError');
 
 class AuthService {
+  
   async login(email, password) {
-    const user = await prisma.user.findUnique({ 
-      where: { email },
-      include: {
-        resident: true,
-        staff: true
-      }
-    });
+  console.log("=================================");
+  console.log("Email:", email);
 
-    if (!user) {
-      throw new AppError('Invalid email or password', 401);
+  const user = await prisma.user.findUnique({
+    where: { email },
+    include: {
+      resident: true,
+      staff: true
     }
+  });
+
+  console.log("User Found:", !!user);
+
+  if (user) {
+    console.log("DB Email:", user.email);
+    console.log("DB Password:", user.password);
+    console.log("Password Length:", password.length);
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    console.log("Password Match:", isPasswordMatch);
+
     if (!isPasswordMatch) {
-      throw new AppError('Invalid email or password', 401);
+      throw new AppError("Invalid email or password", 401);
     }
 
     const accessToken = generateAccessToken(user);
 
     return {
-      user: { 
-        id: user.id, 
-        email: user.email, 
+      user: {
+        id: user.id,
+        email: user.email,
         role: user.role,
         residentId: user.resident?.id || null,
-        staffId: user.staff?.id || null
+        staffId: user.staff?.id || null,
       },
-      accessToken
+      accessToken,
     };
   }
+
+  throw new AppError("Invalid email or password", 401);
+}
 
   async forgotPassword(email) {
     const user = await prisma.user.findUnique({ where: { email } });
