@@ -1,3 +1,0 @@
-T Configuration
-JWT_SECRET=your_jwt_secret_key_here_change_in_production
-JWT_EXPIRE=7d
