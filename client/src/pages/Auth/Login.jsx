@@ -134,10 +134,64 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Info Text */}
-          <p className="text-center text-[10px] text-slate-500 font-semibold uppercase tracking-wider mt-6">
-            Secure access for residents, staff & management
-          </p>
+          {/* Quick Login - Test Accounts */}
+          <div className="mt-6 pt-6 border-t border-slate-800/60">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 text-center">
+              Quick Login — Test Accounts
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {/* Admin */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setEmail('admin@compound.com');
+                  setPassword('admin123');
+                }}
+                className="p-2.5 rounded-xl bg-gradient-to-b from-indigo-950/50 to-indigo-950/20 border border-indigo-800/30 hover:border-indigo-600/50 transition-all text-center group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center mx-auto mb-1.5">
+                  <ShieldAlert size={14} className="text-white" />
+                </div>
+                <p className="text-[11px] font-bold text-indigo-300 group-hover:text-indigo-200 transition-colors">Admin</p>
+                <p className="text-[8px] text-indigo-400/60 group-hover:text-indigo-300/80 mt-0.5">Full Access</p>
+              </motion.button>
+
+              {/* Resident */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setEmail('resident1@compound.com');
+                  setPassword('resident123');
+                }}
+                className="p-2.5 rounded-xl bg-gradient-to-b from-emerald-950/50 to-emerald-950/20 border border-emerald-800/30 hover:border-emerald-600/50 transition-all text-center group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mx-auto mb-1.5">
+                  <Building2 size={14} className="text-white" />
+                </div>
+                <p className="text-[11px] font-bold text-emerald-300 group-hover:text-emerald-200 transition-colors">Resident</p>
+                <p className="text-[8px] text-emerald-400/60 group-hover:text-emerald-300/80 mt-0.5">Limited</p>
+              </motion.button>
+
+              {/* Staff */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setEmail('staff1@compound.com');
+                  setPassword('staff123');
+                }}
+                className="p-2.5 rounded-xl bg-gradient-to-b from-amber-950/50 to-amber-950/20 border border-amber-800/30 hover:border-amber-600/50 transition-all text-center group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mx-auto mb-1.5">
+                  <Lock size={14} className="text-white" />
+                </div>
+                <p className="text-[11px] font-bold text-amber-300 group-hover:text-amber-200 transition-colors">Staff</p>
+                <p className="text-[8px] text-amber-400/60 group-hover:text-amber-300/80 mt-0.5">Mid Access</p>
+              </motion.button>
+            </div>
+          </div>
         </div>
 
         {/* Footer */}
