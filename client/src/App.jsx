@@ -1,72 +1,81 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Loader from './components/Loader';
 
 // Auth Pages
-import Login from './pages/Auth/Login';
-import ForgotPassword from './pages/Auth/ForgotPassword';
-import ResetPassword from './pages/Auth/ResetPassword';
+const Login = lazy(() => import('./pages/Auth/Login'));
+const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/Auth/ResetPassword'));
 
 // Admin Pages
-import AdminDashboard from './pages/Admin/Dashboard';
-import AdminBuildings from './pages/Admin/Buildings';
-import AdminApartments from './pages/Admin/Apartments';
-import AdminResidents from './pages/Admin/Residents';
-import AdminStaff from './pages/Admin/Staff';
-import AdminRequests from './pages/Admin/Requests';
-import AdminVisitors from './pages/Admin/Visitors';
-import AdminAnnouncements from './pages/Admin/Announcements';
+const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
+const AdminBuildings = lazy(() => import('./pages/Admin/Buildings'));
+const AdminApartments = lazy(() => import('./pages/Admin/Apartments'));
+const AdminResidents = lazy(() => import('./pages/Admin/Residents'));
+const AdminStaff = lazy(() => import('./pages/Admin/Staff'));
+const AdminRequests = lazy(() => import('./pages/Admin/Requests'));
+const AdminVisitors = lazy(() => import('./pages/Admin/Visitors'));
+const AdminAnnouncements = lazy(() => import('./pages/Admin/Announcements'));
 
 // Resident Pages
-import ResidentProfile from './pages/Resident/Profile';
-import ResidentRequests from './pages/Resident/Requests';
-import ResidentVisitors from './pages/Resident/Visitors';
-import ResidentAnnouncements from './pages/Resident/Announcements';
+const ResidentProfile = lazy(() => import('./pages/Resident/Profile'));
+const ResidentRequests = lazy(() => import('./pages/Resident/Requests'));
+const ResidentVisitors = lazy(() => import('./pages/Resident/Visitors'));
+const ResidentAnnouncements = lazy(() => import('./pages/Resident/Announcements'));
 
 // Staff Pages
-import StaffTasks from './pages/Staff/Tasks';
-import StaffSecurity from './pages/Staff/Security';
+const StaffTasks = lazy(() => import('./pages/Staff/Tasks'));
+const StaffSecurity = lazy(() => import('./pages/Staff/Security'));
+
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-slate-950">
+    <Loader />
+  </div>
+);
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Admin Restricted Portal */}
-          <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/buildings" element={<AdminBuildings />} />
-            <Route path="/admin/apartments" element={<AdminApartments />} />
-            <Route path="/admin/residents" element={<AdminResidents />} />
-            <Route path="/admin/staff" element={<AdminStaff />} />
-            <Route path="/admin/requests" element={<AdminRequests />} />
-            <Route path="/admin/visitors" element={<AdminVisitors />} />
-            <Route path="/admin/announcements" element={<AdminAnnouncements />} />
-          </Route>
+            {/* Admin Restricted Portal */}
+            <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/buildings" element={<AdminBuildings />} />
+              <Route path="/admin/apartments" element={<AdminApartments />} />
+              <Route path="/admin/residents" element={<AdminResidents />} />
+              <Route path="/admin/staff" element={<AdminStaff />} />
+              <Route path="/admin/requests" element={<AdminRequests />} />
+              <Route path="/admin/visitors" element={<AdminVisitors />} />
+              <Route path="/admin/announcements" element={<AdminAnnouncements />} />
+            </Route>
 
-          {/* Resident Restricted Portal */}
-          <Route element={<ProtectedRoute allowedRoles={['RESIDENT']} />}>
-            <Route path="/resident/profile" element={<ResidentProfile />} />
-            <Route path="/resident/requests" element={<ResidentRequests />} />
-            <Route path="/resident/visitors" element={<ResidentVisitors />} />
-            <Route path="/resident/announcements" element={<ResidentAnnouncements />} />
-          </Route>
+            {/* Resident Restricted Portal */}
+            <Route element={<ProtectedRoute allowedRoles={['RESIDENT']} />}>
+              <Route path="/resident/profile" element={<ResidentProfile />} />
+              <Route path="/resident/requests" element={<ResidentRequests />} />
+              <Route path="/resident/visitors" element={<ResidentVisitors />} />
+              <Route path="/resident/announcements" element={<ResidentAnnouncements />} />
+            </Route>
 
-          {/* Staff Restricted Portal */}
-          <Route element={<ProtectedRoute allowedRoles={['STAFF']} />}>
-            <Route path="/staff/tasks" element={<StaffTasks />} />
-            <Route path="/staff/security" element={<StaffSecurity />} />
-          </Route>
+            {/* Staff Restricted Portal */}
+            <Route element={<ProtectedRoute allowedRoles={['STAFF']} />}>
+              <Route path="/staff/tasks" element={<StaffTasks />} />
+              <Route path="/staff/security" element={<StaffSecurity />} />
+            </Route>
 
-          {/* Default Route */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+            {/* Default Route */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Suspense>
       </AuthProvider>
     </Router>
   );

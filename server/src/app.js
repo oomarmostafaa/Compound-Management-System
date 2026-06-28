@@ -45,6 +45,17 @@ app.options(/.*/, cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 
+// Cache-Control for API responses (improves performance)
+app.use("/api", (req, res, next) => {
+  if (req.method === "GET") {
+    // Cache GET responses for 5 minutes in production
+    res.set("Cache-Control", process.env.NODE_ENV === "production" 
+      ? "public, max-age=300, stale-while-revalidate=600" 
+      : "no-store");
+  }
+  next();
+});
+
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,

@@ -170,6 +170,7 @@ const Profile = () => {
                   <img 
                     src={profile.profileImage} 
                     alt="profile avatar" 
+                    loading="lazy" 
                     className="w-full h-full object-cover" 
                     key={profile.profileImage} // forces reload when changed
                   />

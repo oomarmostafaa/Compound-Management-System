@@ -194,7 +194,7 @@ const Requests = () => {
                 <div className="mt-4 p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-12 h-12 rounded-lg bg-slate-800/80 flex items-center justify-center shrink-0 overflow-hidden">
-                      <img src={req.image} alt="" className="w-full h-full object-cover" />
+                      <img src={req.image} alt="" loading="lazy" className="w-full h-full object-cover" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-bold text-slate-200 truncate">Attachment Image</p>

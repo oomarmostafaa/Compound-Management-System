@@ -258,6 +258,7 @@ const Requests = () => {
                     <img 
                       src={req.image} 
                       alt="Complaint attachment" 
+                      loading="lazy" 
                       className="w-full h-40 object-cover opacity-80 group-hover:opacity-100 transition-all duration-300"
                     />
                   </div>
