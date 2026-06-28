@@ -14,12 +14,12 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000',
-        description: 'Development Server'
-      },
-      {
         url: productionUrl,
         description: 'Production Server'
+      },
+      {
+        url: 'http://localhost:5000',
+        description: 'Development Server'
       }
     ],
     components: {

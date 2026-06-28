@@ -9,6 +9,7 @@ const app = express();
 
 // CORS Configuration
 const vercelRegex = /https:\/\/compound-management-system-[\w-]+-omar-mostafa-s-projects\.vercel\.app/;
+const anyVercelRegex = /https:\/\/[\w-]+\.vercel\.app/;
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -20,11 +21,13 @@ const corsOptions = {
       "http://localhost:5000",
       "http://127.0.0.1:5173",
       "http://127.0.0.1:3000",
-    ].filter(Boolean);
+    ];
 
-    const productionUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
-
-    if (allowedOrigins.includes(origin) || vercelRegex.test(origin) || origin === productionUrl) {
+    if (
+      allowedOrigins.includes(origin) ||
+      vercelRegex.test(origin) ||
+      anyVercelRegex.test(origin)
+    ) {
       return callback(null, true);
     }
 
