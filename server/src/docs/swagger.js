@@ -1,6 +1,9 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
+const isProduction = process.env.NODE_ENV === 'production';
+const productionUrl = process.env.API_URL || 'https://compound-management-system-production.up.railway.app';
+
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -13,6 +16,10 @@ const options = {
       {
         url: 'http://localhost:5000',
         description: 'Development Server'
+      },
+      {
+        url: productionUrl,
+        description: 'Production Server'
       }
     ],
     components: {
@@ -827,7 +834,9 @@ const setupSwagger = (app) => {
   };
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
-  console.log(`  Swagger Docs: http://localhost:5000/api-docs`);
+  console.log(`  Swagger Docs:`);
+  console.log(`    Local:      http://localhost:5000/api-docs`);
+  console.log(`    Production: ${productionUrl}/api-docs`);
 };
 
 module.exports = setupSwagger;
