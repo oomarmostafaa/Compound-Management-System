@@ -10,6 +10,7 @@ const app = express();
 // CORS Configuration
 const vercelRegex = /https:\/\/compound-management-system-[\w-]+-omar-mostafa-s-projects\.vercel\.app/;
 const anyVercelRegex = /https:\/\/[\w-]+\.vercel\.app/;
+const railwayRegex = /https:\/\/[\w-]+\.up\.railway\.app/;
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -26,7 +27,8 @@ const corsOptions = {
     if (
       allowedOrigins.includes(origin) ||
       vercelRegex.test(origin) ||
-      anyVercelRegex.test(origin)
+      anyVercelRegex.test(origin) ||
+      railwayRegex.test(origin)
     ) {
       return callback(null, true);
     }
