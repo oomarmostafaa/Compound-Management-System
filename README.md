@@ -7,22 +7,17 @@
 [![Vercel](https://img.shields.io/badge/deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://compound-management-system-pkiucbo4b-omar-mostafa-s-projects.vercel.app/)
 [![Railway](https://img.shields.io/badge/deployed_on-Railway-0B0D0E?style=for-the-badge&logo=railway)](https://compound-management-system-production.up.railway.app/api-docs/)
 [![Neon](https://img.shields.io/badge/database-Neon-00E599?style=for-the-badge&logo=neon)](https://neon.tech)
-[![Docker](https://img.shields.io/badge/containerized-Docker-2496ED?style=for-the-badge&logo=docker)](https://docker.com)
+[![Docker](https://img.shields.io/badge/containerized-Docker-2496ED?style=for-the-badge&logo=docker)](https://hub.docker.com/r/oomarmostafaa/compound-api)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](https://github.com/oomarmostafaa/Compound-Management-System)
 
 ---
-
-<p align="center">
-  <b>English</b> |
-  <a href="#-نظرة-عامة">العربية</a>
-</p>
 
 ---
 
 [🌐 Live Demo](https://compound-management-system-pkiucbo4b-omar-mostafa-s-projects.vercel.app/) &nbsp;•&nbsp; 
 [📖 API Docs](https://compound-management-system-production.up.railway.app/api-docs/) &nbsp;•&nbsp; 
 [📊 ERD Diagram](/docs/ERD%20Digram.png) &nbsp;•&nbsp; 
-[📄 Full Plan](/docs/Compound%20Management%20System%20plan.txt)
+[📄 Full Plan](/docs/Doc.pdf)
 
 ---
 
@@ -47,7 +42,6 @@
 - [Frontend Overview](#-frontend-overview)
 - [Code Quality & Patterns](#-code-quality--patterns)
 - [Performance & Optimization](#-performance--optimization)
-- [License](#-license)
 
 ---
 
@@ -607,7 +601,7 @@ The application is deployed across three services:
 - **Output Directory**: `client/dist`
 - **Environment**: `VITE_API_URL` set to Railway backend URL
 
-### Backend → Railway
+### Backend → Swagger
 - **URL**: [compound-management-system-production.up.railway.app](https://compound-management-system-production.up.railway.app/api-docs/)
 - **Swagger Docs**: `/api-docs`
 - **Configuration**: Dockerfile-based deployment
@@ -743,24 +737,6 @@ The frontend is a modern React SPA with:
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the **ISC License**.
-
----
-
 <div align="center">
 
 **Built with ❤️ by [Omar Mostafa](https://github.com/oomarmostafaa)**
@@ -770,33 +746,3 @@ This project is licensed under the **ISC License**.
 ---
 
 </div>
-
----
-
-# 🌐 نظرة عامة
-
-**Compound Hub** هو نظام متكامل ومتطور لإدارة المجمعات السكنية، جاهز للإنتاج الفعلي. تم بناء النظام باستخدام أحدث التقنيات لضمان الأداء العالي والأمان والمرونة.
-
-### الأدوار الثلاثة
-
-| الدور | الصلاحيات |
-|-------|-----------|
-| **🛡️ مدير (Admin)** | إدارة كاملة: مبانٍ، شقق، سكان، موظفين، طلبات، زوار، إعلانات، لوحة إحصائيات |
-| **👤 ساكن (Resident)** | إرسال طلبات الصيانة والشكاوى، رفع المستندات، تسجيل الزوار، عرض الإعلانات |
-| **🔧 موظف (Staff)** | عرض المهام المسندة، تحديث حالتها، الموافقة على الزوار أو رفضهم |
-
-### بيانات الاختبار (Seed Data)
-
-| الحساب | البريد الإلكتروني | كلمة المرور |
-|--------|------------------|-------------|
-| مدير | `admin@compound.com` | `admin123` |
-| ساكن | `resident1@compound.com` | `resident123` |
-| موظف | `staff1@compound.com` | `staff123` |
-
----
-
-### الرابط المباشر
-
-- **الموقع المباشر**: [https://compound-management-system-pkiucbo4b-omar-mostafa-s-projects.vercel.app/](https://compound-management-system-pkiucbo4b-omar-mostafa-s-projects.vercel.app/)
-- **توثيق API**: [https://compound-management-system-production.up.railway.app/api-docs/](https://compound-management-system-production.up.railway.app/api-docs/)
-- **المستودع**: [https://github.com/oomarmostafaa/Compound-Management-System](https://github.com/oomarmostafaa/Compound-Management-System)
