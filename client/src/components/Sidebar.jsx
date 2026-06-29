@@ -53,7 +53,7 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-slate-950/20 backdrop-blur-xl border-r border-slate-900/60 flex flex-col h-screen sticky top-0 z-20">
       {/* Brand Header */}
-      <div className="p-6 border-b border-slate-900/40 flex items-center gap-3">
+      <div className="p-6 border-b border-slate-900/40 flex items-center gap-4">
         <motion.div 
           whileHover={{ scale: 1.05, rotate: 6 }}
           whileTap={{ scale: 0.95 }}
@@ -69,7 +69,7 @@ const Sidebar = () => {
       </div>
 
       {/* User Info */}
-      <div className="mx-4 my-4 p-4 border border-slate-900 bg-slate-900/30 rounded-2xl flex items-center gap-3">
+      <div className="mx-4 my-4 p-4 border border-slate-900 bg-slate-900/30 rounded-2xl flex items-center gap-4">
         <div className="w-9 h-9 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center font-bold text-gradient text-xs shadow-inner">
           {user?.email?.charAt(0).toUpperCase()}
         </div>
@@ -94,7 +94,7 @@ const Sidebar = () => {
               <motion.div
                 whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.98 }}
-                className={`relative z-10 flex items-center gap-3 px-4 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-all duration-200 ${
+                className={`relative z-10 flex items-center gap-4 px-4 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-all duration-200 ${
                   isActive 
                     ? 'text-white font-bold' 
                     : 'text-slate-400 hover:text-slate-200'

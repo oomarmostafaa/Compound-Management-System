@@ -39,7 +39,7 @@ const Navbar = () => {
   return (
     <header className="w-full bg-slate-950/20 backdrop-blur-xl border-b border-slate-900/60 sticky top-0 z-30 px-8 py-3 flex items-center justify-between">
       {/* Brand Logo */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <motion.div 
           whileHover={{ scale: 1.05, rotate: 6 }}
           whileTap={{ scale: 0.95 }}
@@ -67,7 +67,7 @@ const Navbar = () => {
               <motion.div
                 whileHover={{ y: -0.5 }}
                 whileTap={{ scale: 0.98 }}
-                className={`relative z-10 flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-colors duration-300 ${
+                className={`relative z-10 flex items-center gap-3 px-4 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-colors duration-300 ${
                   isActive 
                     ? 'text-white' 
                     : 'text-slate-400 hover:text-slate-200'
@@ -104,7 +104,7 @@ const Navbar = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleLogout}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[9px] font-extrabold uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-950/10 border border-transparent hover:border-red-950/20 transition-all duration-200"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl text-[9px] font-extrabold uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-950/10 border border-transparent hover:border-red-950/20 transition-all duration-200"
         >
           <LogOut size={14} />
           Sign Out

@@ -81,7 +81,7 @@ const Login = () => {
                   placeholder="name@compound.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="glass-input w-full pl-14 text-slate-300 placeholder-slate-600"
+                  className="glass-input w-full pl-16 text-slate-300 placeholder-slate-600"
                 />
               </div>
             </div>
@@ -109,7 +109,7 @@ const Login = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="glass-input w-full pl-14 text-slate-300 placeholder-slate-600"
+                  className="glass-input w-full pl-16 text-slate-300 placeholder-slate-600"
                 />
               </div>
             </div>
